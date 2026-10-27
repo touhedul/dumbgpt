@@ -143,6 +143,20 @@ export function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isPanelCollapsed]);
 
+  // Auto-collapse control panel when transitioning from desktop into mobile view
+  const prevWidthRef = useRef(typeof window !== 'undefined' ? window.innerWidth : 1024);
+  useEffect(() => {
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+      if (prevWidthRef.current > 768 && currentWidth <= 768) {
+        setIsPanelCollapsed(true);
+      }
+      prevWidthRef.current = currentWidth;
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Dragging the splitter handle
   const handleSplitterMouseDown = (e) => {
     e.preventDefault();

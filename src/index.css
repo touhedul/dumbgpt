@@ -177,11 +177,14 @@ body, html, #root {
 /* Chat Messages Viewport */
 .chat-scroll-area {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
   scroll-behavior: smooth;
   padding-bottom: 30px;
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f3f transparent;
 }
 
 .chat-content-container {
@@ -862,6 +865,41 @@ body, html, #root {
   display: none;
 }
 
+/* Hide scrollbars across elements on mobile/narrow viewports and touch devices */
+@media (max-width: 850px), (pointer: coarse) {
+  *,
+  html,
+  body,
+  #root,
+  .app-container,
+  .chatgpt-wrapper,
+  .chat-scroll-area,
+  .control-panel-wrapper,
+  .control-panel-body,
+  .queue-list,
+  .chat-input-textarea {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE/Edge */
+  }
+
+  *::-webkit-scrollbar,
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  #root::-webkit-scrollbar,
+  .app-container::-webkit-scrollbar,
+  .chatgpt-wrapper::-webkit-scrollbar,
+  .chat-scroll-area::-webkit-scrollbar,
+  .control-panel-wrapper::-webkit-scrollbar,
+  .control-panel-body::-webkit-scrollbar,
+  .queue-list::-webkit-scrollbar,
+  .chat-input-textarea::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+  }
+}
+
 @media (max-width: 768px) {
   .mobile-backdrop {
     display: block;
@@ -878,8 +916,11 @@ body, html, #root {
   .app-container {
     flex-direction: column;
     position: relative;
+    width: 100%;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
   }
 
   /* Control Panel as smooth sliding drawer on mobile */
@@ -913,11 +954,14 @@ body, html, #root {
     display: none !important;
   }
 
-  /* ChatGPT full screen width & height on mobile */
+  /* ChatGPT full screen width & height on mobile without window scrollbar */
   .chatgpt-wrapper {
+    width: 100% !important;
     width: 100vw !important;
-    height: 100vh !important;
+    height: 100% !important;
+    height: 100dvh !important;
     flex: 1 !important;
+    overflow: hidden !important;
   }
 
   /* Header matches download.jpg */
@@ -935,10 +979,34 @@ body, html, #root {
     font-size: 13.5px;
   }
 
+  /* Chat Messages Viewport on Mobile - Clean touch scroll without visible bar */
+  .chat-scroll-area {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .chat-scroll-area::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
   /* Chat viewport container */
   .chat-content-container {
     padding: 12px 14px 130px 14px;
     gap: 22px;
+  }
+
+  /* Welcome Screen on Mobile fits cleanly without forcing initial vertical scroll */
+  .welcome-container {
+    height: auto;
+    min-height: 40vh;
+    padding: 24px 0;
   }
 
   .user-bubble {
